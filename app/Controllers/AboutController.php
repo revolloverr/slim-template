@@ -9,7 +9,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class AboutController extends BaseController
 {
-    private const API_NAME = 'YOUR_PROJECT_NAME';
+    private const API_NAME = 'Switches-API';
 
     private const API_VERSION = '1.0.0';
 
@@ -20,7 +20,7 @@ class AboutController extends BaseController
             'api' => self::API_NAME,
             'version' => self::API_VERSION,
             'about' => 'Welcome! This i a Web service that provides this and that...',
-            'authors' => 'FrostyBee',
+            'authors' => 'FrostyBee and Sarah Radi',
             'resources' => '/blah'
         );
 

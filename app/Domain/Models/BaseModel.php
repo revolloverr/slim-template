@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Models;
 
+use App\Helpers\PaginationHelper;
 use PDO;
 use App\Helpers\Core\PDOService;
 use Exception;
@@ -357,5 +358,28 @@ abstract class BaseModel
     {
         $this->current_page = $current_page;
         $this->records_per_page = $records_per_page;
+    }
+
+    protected function paginate(string $sql, array $args = [], $fetchMode = PDO::FETCH_ASSOC): array
+    {
+        //*1- get/compute total number aka the count of the records of rows that will be included in the result set of the received query (select) (query to count records)
+        $count = $this->count($sql, $args);
+        //*2- INSTANTIATE paginationhelper (pass it) by selecting the 3 params in its constructer
+        //*page number page size and the count from step 1
+        $paginationHelper = new PaginationHelper($this->current_page, $this->records_per_page, $count);
+        //*3- get the offset from the paginationhelper function
+        $offset = $paginationHelper->getOffset();
+        //*4- we append the limit keyword into the query with the offset from step 3
+        $sql .= " LIMIT $this->records_per_page OFFSET $offset";
+        //*5- execute the contstraint query look at examples above call run or fetch all
+        //* do this->fetchall with the data
+        $data = $this->fetchAll($sql, $args);
+        //*6- with the result, get and combine the metadata using paginationhelper with the data returned from the query
+        $meta = $paginationHelper->getPaginationMetadata();
+
+        return [
+            "meta" => $meta,
+            "data" => $data
+        ];
     }
 }

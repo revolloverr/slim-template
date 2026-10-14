@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\Controllers\AboutController;
+use App\Controllers\KeyboardsController;
+use App\Controllers\VendorsController;
 use App\Helpers\DateTimeHelper;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -18,6 +20,22 @@ return static function (Slim\App $app): void {
     //* NOTE: callback naming pattern: handle<ActionName>, e.g. handleGetPlayers
     //* ROUTE: GET /players
     //$app->get('/players', [PlayersController::class, 'handleGetPlayers']);
+
+    //*ROUTE: GET /vendors
+    $app->get('/vendors', [VendorsController::class, 'handleGetVendors']);
+
+    //*ROUTE: GET /vendors/{vendor_id} <- single vendor
+    $app->get('/vendors/{vendor_id}', [VendorsController::class, 'handleGetVendorsById']);
+
+    $app->get('/vendors/{vendor_id}/switches', [VendorsController::class, 'handleGetSwitches']);
+
+    //*ROUTE: GET /keyboards
+    $app->get('/keyboards', [KeyboardsController::class, 'handleGetKeyboards']);
+
+    //*ROUTE: GET /vendors/{keyboard_id} <- single keyboard
+    $app->get('/keyboards/{keyboard_id}', [KeyboardsController::class, 'handleGetKeyboardsById']);
+
+    $app->get('/keyboards/{keyboard_id}/reviews', [KeyboardsController::class, 'handleGetReviews']);
 
     //* ROUTE: GET /ping
     $app->get('/ping', function (Request $request, Response $response, $args) {
